@@ -29,6 +29,6 @@ object Demo_rdd_films {
       case (key, value) =>
         println(s"$key : $value")
     }
-
+    scala.io.StdIn.readLine("Enter pour quitter l'application")
   }
 }

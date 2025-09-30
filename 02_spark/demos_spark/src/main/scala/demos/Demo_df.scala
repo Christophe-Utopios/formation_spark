@@ -35,7 +35,7 @@ object Demo_df {
     val dfAge = df.select(
       min("age").alias("age_min"),
       max("age").alias("age_max"),
-      avg("age").alias("age_avg")
+      round(avg("age"), 2).alias("age_avg")
     ).collect()
 
     println(dfAge.toList)

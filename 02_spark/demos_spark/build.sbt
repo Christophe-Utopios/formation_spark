@@ -9,3 +9,6 @@ lazy val root = (project in file("."))
 
 libraryDependencies += "org.apache.spark" %% "spark-core" % "4.0.1"
 libraryDependencies += "org.apache.spark" %% "spark-sql" % "4.0.1"
+
+libraryDependencies += "org.plotly-scala" %% "plotly-render" % "0.8.4"
+libraryDependencies +=  "org.plotly-scala" %% "plotly-almond" % "0.8.4"

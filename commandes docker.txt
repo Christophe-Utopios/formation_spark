@@ -7,3 +7,7 @@ Pour installer pyspark
 
 - Télécharger pyspark avec la commande : pip install pyspark
 - Ajouter la variable d'environnement : PYSPARK_PYTHON => Mettre le chemin vers la version de python
+
+Bibliothèques de graphiques en python :
+- MatplotLib
+- Seaborn

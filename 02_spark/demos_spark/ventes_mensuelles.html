@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Ventes Mensuelles</title>
+<script src="https://cdn.plot.ly/plotly-1.54.1.min.js"></script>
+</head>
+<body>
+<div id="chart"></div>
+<script>
+(function () {
+  var data0 = {"x":["Janvier","Février","Mars","Avril","Mai"],"name":"Ventes Mensuelles","y":[150.0,100.0,50.0,75.0,200.0],"type":"bar"};
+
+  var data = [data0];
+  var layout = {"title":"Ventes Mensuelles","yaxis":{"title":"Ventes"},"xaxis":{"title":"Mois"}};
+ var config = {};
+
+  Plotly.plot('chart', data, layout, config);
+})();
+</script>
+</body>
+</html>
+       

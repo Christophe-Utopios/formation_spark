@@ -71,5 +71,7 @@ object Demo_broadcast {
     val userWithUdf = userDf.withColumn("country_name", getCountryUDF(col("country_code")))
 
     userWithUdf.show()
+    broadcastCountries.destroy()
+    broadcastConfig.destroy()
   }
 }

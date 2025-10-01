@@ -1,7 +1,7 @@
 package exercices
 
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.functions.{broadcast, col}
+import org.apache.spark.sql.functions.{avg, broadcast, col, count, desc, sum}
 
 object exercice_05 {
   def main(args: Array[String]): Unit = {
@@ -86,14 +86,30 @@ object exercice_05 {
     // TODO 4: Convertir les montants en USD selon le pays du client
     // Utilisez les taux de change avec broadcast
     // Nouvelle colonne : total_amount_usd
-    val salesInUSD = ???
+    val salesInUSD = salesWithAmount.join(
+      broadcast(exchangeRatesDF),
+      salesWithAmount("country") === exchangeRatesDF("country"),
+      "inner"
+    ).withColumn(
+      "total_amount_usd",
+      col("total_amount") * col("usd_rate")
+    ).drop(exchangeRatesDF("country")) // éviter la duplication de colonne
 
     // TODO 5: Calculer des statistiques par catégorie de produit
     // Afficher : category, nombre de ventes, montant total USD, montant moyen USD
-    val statsByCategory = ???
+    val statsByCategory = salesInUSD.groupBy("category")
+      .agg(
+        count("sale_id").alias("nombre_ventes"),
+        sum("total_amount_usd").alias("montant_total_usd"),
+        avg("total_amount_usd").alias("montant_moyen_usd")
+      )
+      .orderBy(desc("montant_total_usd"))
 
     // TODO 6: Identifier les clients Premium qui ont acheté des Electronics
     // Afficher : customer_name, product_name, total_amount_usd
-    val premiumElectronics = ???
+    val premiumElectronics = salesInUSD
+      .filter(col("membership") === "Premium" && col("category") === "Electronics")
+      .select("customer_name", "product_name", "total_amount_usd")
+      .orderBy("customer_name")
   }
 }

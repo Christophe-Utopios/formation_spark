@@ -1,5 +1,6 @@
 package demos
 
+import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 
@@ -20,7 +21,8 @@ object Demo_broadcast {
       ("Toto", "US", 30),
       ("Tata", "FR", 20),
       ("Titi", "DE", 24),
-      ("Tutu", "FR", 28)
+      ("Tutu", "FR", 28),
+      ("Tutu", "AA", 28),
     ).toDF("name", "country_code", "age")
 
     // Broadcast join (Spark optimise automatiquement les petites tables)
@@ -51,5 +53,23 @@ object Demo_broadcast {
     val filteredUserDF = userDf.filter(userFilterUDF(col("age"), col("country_code")))
 
     filteredUserDF.show()
+
+    // Création d'une Map
+    val countryMapping = Map(
+      "US" -> "United States",
+      "FR" -> "France",
+      "DE" -> "Germany",
+      "JP" -> "Japan"
+    )
+
+    val broadcastCountries: Broadcast[Map[String,String]] = spark.sparkContext.broadcast(countryMapping)
+
+    val getCountryUDF = udf((code : String) => {
+        broadcastCountries.value.getOrElse(code, "Unknown")
+    })
+
+    val userWithUdf = userDf.withColumn("country_name", getCountryUDF(col("country_code")))
+
+    userWithUdf.show()
   }
 }
